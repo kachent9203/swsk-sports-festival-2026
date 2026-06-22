@@ -695,8 +695,10 @@
     matches.forEach((m, i) => {
       html += `
       <div class="schedule-row ${m.live ? 'live-row' : ''}" style="${i === matches.length - 1 ? 'border-bottom: none;' : ''}">
-        <div class="row-time"><span style="color:#6b7a9e;font-size:14px;">🕐</span> 
-        ${new Date(m.time).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', hour12: false })} </div>
+        <div class="row-time">
+          <span style="color:#6b7a9e;font-size:14px;">🕐</span> 
+          ${new Date(m.time).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', hour12: false })}
+        </div>
         <div class="row-sport">${m.sport}</div>
         <div class="row-teams">
           <span class="row-team" style="color:${getTeamColor(m.teamA)};">${m.teamA}</span>
