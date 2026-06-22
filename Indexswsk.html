@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SWSK 2026 – Sports Festival</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=DM+Mono:wght@500&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+      background: #f0f9ff;
+    }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #f0f6ff; }
+    ::-webkit-scrollbar-thumb { background: rgba(37,99,235,0.25); border-radius: 2px; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-14px); }
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    @keyframes ping-soft {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.4); }
+    }
+    @keyframes countUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Navbar ── */
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 40px;
+      background: rgba(255,255,255,0.55);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid transparent;
+      transition: all 0.3s ease;
+    }
+    .navbar.scrolled {
+      background: rgba(255,255,255,0.82);
+      border-bottom: 1px solid rgba(37,99,235,0.12);
+      box-shadow: 0 4px 24px rgba(37,99,235,0.06);
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .nav-logo-icon { color: #fbbf24; filter: drop-shadow(0 0 6px #fbbf24); }
+    .nav-logo-text {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900; font-size: 18px;
+      color: #2563eb; letter-spacing: 0.05em;
+    }
+    .nav-links { display: flex; gap: 4px; }
+    .nav-btn {
+      padding: 8px 16px; border-radius: 999px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px; font-weight: 700;
+      background: transparent; color: #1a2340;
+      border: none; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .nav-btn.active {
+      background: #2563eb; color: #fff;
+      box-shadow: 0 4px 14px rgba(37,99,235,0.3);
+    }
+    .nav-date {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px; font-weight: 500;
+      background: #fef9c3; color: #92400e;
+      border: 1px solid #fde68a;
+      padding: 8px 16px; border-radius: 999px;
+    }
+    @media (max-width: 640px) {
+      .navbar { padding: 12px 20px; }
+      .nav-date { display: none; }
+    }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative; min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      overflow: hidden; padding-top: 80px;
+      background: linear-gradient(160deg, #e0f0ff 0%, #f0f9ff 30%, #fef9ec 65%, #fff1f6 100%);
+    }
+    .sun-blob {
+      position: absolute; border-radius: 50%;
+      pointer-events: none;
+      background: radial-gradient(circle, rgba(253,224,71,0.55) 0%, rgba(251,191,36,0.18) 60%, transparent 80%);
+      filter: blur(2px);
+    }
+    .orb {
+      position: absolute; border-radius: 50%;
+      pointer-events: none; filter: blur(40px);
+    }
+    .mascot-float {
+      position: absolute; font-size: 48px;
+      user-select: none; line-height: 1;
+    }
+    @media (max-width: 1024px) { .mascot-float { display: none; } }
+
+    .hero-content {
+      position: relative; z-index: 10;
+      display: flex; flex-direction: column;
+      align-items: center; text-align: center;
+      padding: 0 24px; gap: 24px; max-width: 900px;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 20px; border-radius: 999px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      background: rgba(255,255,255,0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(37,99,235,0.18);
+      color: #2563eb;
+      box-shadow: 0 4px 20px rgba(37,99,235,0.1);
+    }
+    .hero-badge-icon { color: #fbbf24; font-size: 16px; }
+
+    .hero-title {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900; line-height: 1.05;
+      font-size: clamp(2.6rem, 8.5vw, 7rem);
+      color: #2563eb;
+      text-shadow: 0 4px 30px rgba(37,99,235,0.18);
+      letter-spacing: -0.02em;
+    }
+    .hero-subtitle {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900; line-height: 1.1;
+      font-size: clamp(1.5rem, 4.5vw, 3.8rem);
+      background: linear-gradient(90deg, #db2777, #ea580c, #eab308, #2563eb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.01em;
+    }
+    .hero-tagline {
+      font-size: 20px; font-weight: 600;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: #6b7a9e;
+    }
+    .hero-pills { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+    .hero-pill {
+      padding: 8px 16px; border-radius: 999px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px; font-weight: 700;
+    }
+    .scroll-hint {
+      position: absolute; bottom: 40px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+    }
+    .scroll-hint-text {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase; color: #6b7a9e;
+    }
+    .scroll-chevron {
+      animation: bounce 1.4s ease-in-out infinite;
+      color: #2563eb; font-size: 22px;
+    }
+
+    /* ── Teams Section ── */
+    .teams-section {
+      position: relative; padding: 96px 24px;
+      background: linear-gradient(180deg, #f0f9ff 0%, #fef9ec 100%);
+    }
+    .dots-bg {
+      position: absolute; inset: 0; pointer-events: none;
+      opacity: 0.035;
+      background-image: radial-gradient(#2563eb 1.5px, transparent 1.5px);
+      background-size: 36px 36px;
+    }
+    .section-inner { position: relative; max-width: 1280px; margin: 0 auto; }
+    .section-header { text-align: center; margin-bottom: 56px; }
+    .section-eyebrow {
+      display: block;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 0.4em; text-transform: uppercase;
+      color: #6b7a9e; margin-bottom: 8px;
+    }
+    .section-title {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      color: #1a2340; letter-spacing: -0.01em;
+    }
+    .section-title .accent-blue { color: #2563eb; }
+    .section-title .accent-pink { color: #db2777; }
+    .section-title .accent-orange { color: #ea580c; }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+    @media (max-width: 1024px) { .team-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px) { .team-grid { grid-template-columns: 1fr; } }
+
+    .team-card {
+      position: relative; display: flex;
+      flex-direction: column; align-items: center;
+      border-radius: 24px; overflow: hidden;
+      background: rgba(255,255,255,0.72);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+    }
+    .team-card:hover {
+      transform: translateY(-12px);
+      box-shadow: 0 24px 48px rgba(0,0,0,0.12) !important;
+    }
+    .team-card:hover .team-mascot { transform: scale(1.1); }
+    .team-card:hover .card-shimmer { opacity: 1; }
+
+    .card-top-strip { width: 100%; height: 8px; }
+    .card-rank {
+      position: absolute; top: 20px; right: 20px;
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Nunito', sans-serif;
+      font-size: 14px; font-weight: 900;
+      color: #fff; z-index: 10;
+    }
+    .card-mascot-area {
+      width: 100%; display: flex; align-items: center;
+      justify-content: center; padding: 40px 0;
+      min-height: 210px; position: relative; overflow: hidden;
+    }
+    .card-mascot-bg {
+      position: absolute; width: 176px; height: 176px;
+      border-radius: 50%; opacity: 0.5;
+    }
+    .team-mascot {
+      position: relative; z-index: 10;
+      font-size: 110px; line-height: 1;
+      user-select: none;
+      transition: transform 0.3s;
+    }
+    .card-info {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 8px;
+      padding: 16px 24px 32px; width: 100%;
+    }
+    .card-tagline {
+      display: flex; align-items: center; gap: 6px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 12px; font-weight: 700;
+      padding: 4px 12px; border-radius: 999px;
+    }
+    .card-name {
+      font-family: 'Nunito', sans-serif;
+      font-size: 20px; font-weight: 900;
+      text-align: center; margin-top: 4px;
+    }
+    .card-score {
+      font-family: 'DM Mono', monospace;
+      font-weight: 500;
+      font-size: clamp(2rem, 5vw, 3rem);
+      line-height: 1;
+    }
+    .card-score-label {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 0.3em; margin-top: 4px;
+    }
+    .card-divider { width: 100%; height: 1px; margin: 8px 0; }
+    .card-wl {
+      display: flex; gap: 16px;
+      font-family: 'DM Mono', monospace;
+      font-size: 14px; font-weight: 500;
+    }
+    .card-shimmer {
+      position: absolute; inset: 0;
+      opacity: 0; pointer-events: none;
+      border-radius: 24px;
+      transition: opacity 0.3s;
+    }
+
+    /* ── Schedule ── */
+    .schedule-section {
+      position: relative; padding: 96px 24px;
+      background: #f8faff;
+    }
+    .schedule-card {
+      border-radius: 24px; overflow: hidden;
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 24px; overflow: hidden; border: 1.5px solid rgba(37,99,235,0.1);
+      box-shadow: 0 8px 40px rgba(37,99,235,0.07);
+      max-height: 450px; 
+      overflow-y: auto;
+    }
+    .schedule-header {
+      display: grid; grid-template-columns: 1fr 1fr 1.6fr 1fr;
+      padding: 16px 32px;
+      background: linear-gradient(90deg, #dbeafe, #fce7f3);
+    }
+    .schedule-header-cell {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 12px; font-weight: 800;
+      letter-spacing: 0.2em; text-transform: uppercase; color: #6b7a9e;
+    }
+    .schedule-row {
+      display: grid; grid-template-columns: 1fr 1fr 1.6fr 1fr;
+      padding: 20px 32px; align-items: center;
+      transition: background 0.2s;
+      border-bottom: 1px solid rgba(37,99,235,0.07);
+    }
+    .schedule-row:last-child { border-bottom: none; }
+    .schedule-row:hover { background: rgba(219,234,254,0.3); }
+    .schedule-row.live-row { background: rgba(219,234,254,0.35); }
+    .row-time {
+      display: flex; align-items: center; gap: 8px;
+      font-family: 'DM Mono', monospace;
+      font-size: 14px; font-weight: 500; color: #1a2340;
+    }
+    .row-sport {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px; font-weight: 600; color: #1a2340;
+    }
+    .row-teams {
+      display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    }
+    .row-team {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px; font-weight: 700;
+    }
+    .row-vs {
+      font-size: 12px; color: #9ca3af; font-weight: 700;
+    }
+    .badge-live {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 4px 12px; border-radius: 999px;
+      background: #dbeafe; color: #1d4ed8;
+      font-size: 12px; font-weight: 700;
+    }
+    .live-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #3b82f6;
+      animation: ping-soft 1.4s ease-in-out infinite;
+      display: inline-block;
+    }
+    .badge-upcoming {
+      font-size: 12px; font-weight: 600;
+      padding: 4px 12px; border-radius: 999px;
+      background: #f3f4f6; color: #9ca3af;
+    }
+    @media (max-width: 640px) {
+      .schedule-header, .schedule-row {
+        grid-template-columns: 80px 1fr;
+        gap: 8px;
+      }
+      .row-status-col, .schedule-header-cell:last-child,
+      .schedule-header-cell:nth-child(2) { display: none; }
+    }
+
+    /* ── Podium ── */
+    .podium-section {
+      position: relative; padding: 112px 24px;
+      overflow: hidden;
+      background: linear-gradient(180deg, #fef9ec 0%, #f0f6ff 100%);
+    }
+    .podium-inner { position: relative; max-width: 900px; margin: 0 auto; }
+    .podium-stage {
+      display: flex; align-items: flex-end;
+      justify-content: center; gap: 24px;
+    }
+    .podium-col {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 12px;
+      flex: 1; max-width: 200px;
+    }
+    .podium-medal { font-size: 40px; line-height: 1; }
+    .podium-medal.silver { font-size: 32px; }
+    .podium-medal.bronze { font-size: 32px; }
+    .podium-mascot { font-size: 52px; line-height: 1; }
+    .podium-team-name {
+      font-family: 'Nunito', sans-serif;
+      font-size: 14px; font-weight: 900;
+      text-align: center;
+    }
+    .podium-pts {
+      font-family: 'DM Mono', monospace;
+      font-size: 15px; font-weight: 500;
+    }
+    .podium-block {
+      width: 100%; border-radius: 16px 16px 0 0;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .podium-rank-text {
+      font-family: 'Nunito', sans-serif;
+      font-size: 30px; font-weight: 900; opacity: 0.4;
+    }
+
+    .winner-card {
+      margin-top: 56px; text-align: center;
+      padding: 32px; border-radius: 24px;
+      background: rgba(255,255,255,0.78);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 2px solid rgba(37,99,235,0.14);
+      box-shadow: 0 8px 40px rgba(37,99,235,0.08);
+    }
+    .winner-trophy {
+      font-size: 36px; display: block;
+      margin: 0 auto 12px; line-height: 1;
+    }
+    .winner-label {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: #6b7a9e; margin-bottom: 8px;
+      display: block;
+    }
+    .winner-name {
+      font-family: 'Nunito', sans-serif;
+      font-size: 30px; font-weight: 900; color: #2563eb;
+    }
+    .winner-desc {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 14px; color: #6b7a9e; margin-top: 8px;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      padding: 40px 32px;
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(37,99,235,0.1);
+    }
+    .footer-inner {
+      max-width: 1280px; margin: 0 auto;
+      display: flex; align-items: center;
+      justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    }
+    .footer-logo {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .footer-logo-text {
+      font-family: 'Nunito', sans-serif;
+      font-size: 16px; font-weight: 900;
+      color: #2563eb; letter-spacing: 0.05em;
+    }
+    .footer-tagline {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 12px; font-weight: 600;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: #6b7a9e;
+    }
+    .footer-date {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px; color: #9ca3af;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Navbar ── -->
+<nav class="navbar" id="navbar">
+  <div class="nav-logo">
+    <span class="nav-logo-icon">☀️</span>
+    <span class="nav-logo-text">SWSK</span>
+  </div>
+  <div class="nav-links">
+    <button class="nav-btn active" onclick="setActive(this,'#hero')">Home</button>
+    <button class="nav-btn" onclick="setActive(this,'#schedule')">Schedule</button>
+    <button class="nav-btn" onclick="setActive(this,'#leaderboard')">Leaderboard</button>
+  </div>
+  <div class="nav-date">June 22, 2026</div>
+</nav>
+
+<!-- ── Hero ── -->
+<section class="hero" id="hero">
+  <div class="sun-blob" style="width:520px;height:520px;top:-80px;right:-80px;opacity:0.7;"></div>
+  <div class="sun-blob" style="width:260px;height:260px;bottom:60px;left:5%;opacity:0.5;"></div>
+  <div class="orb" style="width:360px;height:360px;top:30%;left:-80px;background:radial-gradient(circle, rgba(219,39,119,0.12) 0%, transparent 70%);"></div>
+  <div class="orb" style="width:280px;height:280px;bottom:10%;right:8%;background:radial-gradient(circle, rgba(124,58,237,0.10) 0%, transparent 70%);"></div>
+
+  <div class="mascot-float" style="top:112px;left:6%;animation:bounce 3.2s ease-in-out infinite;">🐉</div>
+  <div class="mascot-float" style="top:128px;right:6%;animation:float 4s ease-in-out infinite;">🦊</div>
+  <div class="mascot-float" style="bottom:112px;left:10%;animation:float 3.5s ease-in-out infinite 0.5s;">🦁</div>
+  <div class="mascot-float" style="bottom:96px;right:10%;animation:float 4.2s ease-in-out infinite 1s;">🐯</div>
+
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="hero-badge-icon">☀️</span>
+      Sports Festival 2026 · SWSK School
+      <span class="hero-badge-icon">☀️</span>
+    </div>
+    <div>
+      <h1 class="hero-title">SWSK 2026</h1>
+      <h2 class="hero-subtitle">SPORTS FESTIVAL</h2>
+    </div>
+    <p class="hero-tagline">☀️ Challenge The Sun ☀️</p>
+
+    <!-- ปุ่มเล่นเกมที่เพิ่มใหม่ -->
+    <div style="margin-top: 16px;">
+      <a href="https://kachent9203.github.io/swsk-challenge-2026/" target="_blank" style="text-decoration: none;">
+        <button class="nav-btn active" style="padding: 16px 32px; font-size: 18px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 8px 24px rgba(37,99,235,0.4); transform: scale(1.05);">
+          🎮 เล่นมินิเกมเก็บคะแนน
+        </button>
+      </a>
+    </div>
+
+    <div class="hero-pills" style="margin-top: 16px;">
+      <div class="hero-pill" style="background:#dbeafe;color:#2563eb;border:1.5px solid rgba(37,99,235,0.2);">4 Teams</div>
+      <div class="hero-pill" style="background:#fce7f3;color:#db2777;border:1.5px solid rgba(219,39,119,0.2);">12 Events</div>
+      <div class="hero-pill" style="background:#ffedd5;color:#ea580c;border:1.5px solid rgba(234,88,12,0.2);">One Champion</div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span class="scroll-hint-text">Scroll Down to Explore</span>
+    <span class="scroll-chevron">⌄</span>
+  </div>
+</section>
+
+<!-- ── Teams / Leaderboard ── -->
+<section class="teams-section" id="leaderboard">
+  <div class="dots-bg"></div>
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-eyebrow">Live Standings</span>
+      <h2 class="section-title">Team <span class="accent-blue">Leaderboard</span></h2>
+      <p id="loading-teams" style="color: #6b7a9e; margin-top: 10px;">กำลังโหลดข้อมูลคะแนนจากฐานข้อมูล...</p>
+    </div>
+    <div class="team-grid" id="team-grid"></div>
+  </div>
+</section>
+
+<!-- ── Schedule ── -->
+<section class="schedule-section" id="schedule">
+  <div class="section-inner" style="max-width:900px;">
+    <div class="section-header">
+      <span class="section-eyebrow">Today's Agenda</span>
+      <h2 class="section-title">Match <span class="accent-pink">Schedule</span></h2>
+      <p id="loading-schedule" style="color: #6b7a9e; margin-top: 10px;">กำลังโหลดตารางแข่ง...</p>
+    </div>
+    <div class="schedule-card" id="schedule-card"></div>
+  </div>
+</section>
+
+<!-- ── Podium ── -->
+<section class="podium-section" id="podium">
+  <div class="sun-blob" style="width:500px;height:500px;top:-120px;right:-100px;opacity:0.55;"></div>
+  <div class="sun-blob" style="width:300px;height:300px;bottom:-80px;left:-60px;opacity:0.4;"></div>
+  <div class="podium-inner">
+    <div class="section-header">
+      <span class="section-eyebrow">Overall Standings</span>
+      <h2 class="section-title">🏆 Champion <span class="accent-orange">Podium</span></h2>
+      <p style="margin-top:12px;font-size:14px;color:#6b7a9e;">Final results after all events are completed</p>
+    </div>
+    <div class="podium-stage" id="podium-stage"></div>
+    <div class="winner-card">
+      <span class="winner-trophy">🏆</span>
+      <span class="winner-label">Current Leader</span>
+      <div class="winner-name">Blue Dragon 🐉</div>
+      <p class="winner-desc">Leading with highest points — Competition still in progress</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-logo">
+      <span style="font-size:20px;">☀️</span>
+      <span class="footer-logo-text">SWSK 2026</span>
+    </div>
+    <p class="footer-tagline">CHALLENGE THE SUN · SPORTS FESTIVAL 2026</p>
+    <p class="footer-date">June 22, 2026</p>
+  </div>
+</footer>
+
+<script>
+// ── เชื่อมต่อกับ API (Google Apps Script) ของคุณ ──
+  const API_URL = "https://script.google.com/macros/s/AKfycbzJcV77q0JBl_quY70s6OiCgZgPBhB7OWOQ4F8lKIyj4QkWx2p6bI5vJ9s70Nyg4y7Q/exec";
+
+  async function loadFestivalData() {
+    try {
+      const response = await fetch(API_URL);
+      const data = await response.json();
+      
+      // ประมวลผลคะแนน (คะแนนกีฬา + คะแนนมินิเกม)
+      const dynamicTeams = data.teams.map(team => {
+        team.score = (parseInt(team.sportsScore) || 0) + (parseInt(team.gameScore) || 0);
+        // กำหนดสีและรายละเอียดตามชื่อทีม
+        if(team.id === "blue-dragon") { team.color="#2563eb"; team.colorLight="#dbeafe"; team.colorMid="#93c5fd"; team.icon="💨"; team.tagline="Swift & Powerful";}
+        else if(team.id === "pink-fox") { team.color="#db2777"; team.colorLight="#fce7f3"; team.colorMid="#f9a8d4"; team.icon="✨"; team.tagline="Clever & Fast";}
+        else if(team.id === "orange-lion") { team.color="#ea580c"; team.colorLight="#ffedd5"; team.colorMid="#fdba74"; team.icon="🔥"; team.tagline="Bold & Fierce";}
+        else if(team.id === "purple-tiger") { team.color="#7c3aed"; team.colorLight="#ede9fe"; team.colorMid="#c4b5fd"; team.icon="⭐"; team.tagline="Agile & Strong";}
+        else { team.color="#6b7a9e"; team.colorLight="#f3f4f6"; team.colorMid="#9ca3af"; team.icon="🏆"; team.tagline="Team"; }
+        return team;
+      });
+
+      // จัดอันดับ
+      dynamicTeams.sort((a, b) => b.score - a.score);
+      dynamicTeams.forEach((team, index) => team.rank = index + 1);
+
+      document.getElementById('loading-teams').style.display = 'none';
+      document.getElementById('loading-schedule').style.display = 'none';
+
+      renderTeams(dynamicTeams);
+      renderMatches(data.matches, dynamicTeams );
+      setTimeout(() => {
+      const liveMatch = schedCard.querySelector('.live-row');
+      if (liveMatch) liveMatch.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 500);
+      renderPodium(dynamicTeams);
+
+    } catch (error) {
+      console.error("Error loading data:", error);
+      document.getElementById('loading-teams').innerText = "โหลดข้อมูลไม่สำเร็จ โปรดตรวจสอบ Google Sheets หรือ URL API ของคุณ";
+      document.getElementById('loading-schedule').innerText = "โหลดข้อมูลไม่สำเร็จ";
+    }
+  }
+
+  function renderTeams(teams) {
+    const grid = document.getElementById("team-grid");
+    grid.innerHTML = "";
+    teams.forEach((team) => {
+      const card = document.createElement("div");
+      card.className = "team-card";
+      card.style.cssText = `border: 2px solid ${team.color}22; box-shadow: 0 8px 32px rgba(0,0,0,0.06), 0 2px 8px ${team.color}18;`;
+      card.innerHTML = `
+        <div class="card-top-strip" style="background:linear-gradient(90deg, ${team.colorMid}, ${team.color});"></div>
+        <div class="card-rank" style="background:${team.color}; box-shadow: 0 4px 12px ${team.color}50;">#${team.rank}</div>
+        <div class="card-mascot-area" style="background:linear-gradient(160deg, ${team.colorLight}, white);">
+          <div class="card-mascot-bg" style="background:${team.colorLight};"></div>
+          <span class="team-mascot" style="filter:drop-shadow(0 8px 20px ${team.color}40);">${team.mascot}</span>
+        </div>
+        <div class="card-info">
+          <div class="card-tagline" style="background:${team.colorLight}; color:${team.color};">
+            ${team.icon} ${team.tagline}
+          </div>
+          <div class="card-name" style="color:${team.color};">${team.name}</div>
+          <div style="display:flex;flex-direction:column;align-items:center;margin-top:12px;width:100%;">
+            <div class="card-score js-score" style="color:${team.color};" data-target="${team.score}">0</div>
+            <div class="card-score-label" style="color:${team.colorMid};">PTS</div>
+          </div>
+          <div class="card-divider" style="background:${team.color}18;"></div>
+          <div class="card-wl">
+            <span style="color:#16a34a;">${team.wins} W</span>
+            <span style="color:#9ca3af;">/</span>
+            <span style="color:#ef4444;">${team.losses} L</span>
+          </div>
+        </div>
+        <div class="card-shimmer" style="background:linear-gradient(160deg, ${team.colorLight}50 0%, transparent 60%);"></div>
+      `;
+      grid.appendChild(card);
+    });
+
+    // เริ่มอนิเมชันนับคะแนน
+    setTimeout(() => {
+      document.querySelectorAll(".js-score").forEach((el) => animateCount(el, parseInt(el.dataset.target)));
+    }, 200);
+  }
+
+  function renderMatches(matches, teamsData) {
+    const schedCard = document.getElementById("schedule-card");
+    let html = `<div class="schedule-header">
+      <div class="schedule-header-cell">TIME</div>
+      <div class="schedule-header-cell">SPORT</div>
+      <div class="schedule-header-cell">MATCH</div>
+      <div class="schedule-header-cell">STATUS</div>
+    </div>`;
+    
+    function getTeamColor(teamName) {
+      const team = teamsData.find(t => t.name === teamName);
+      return team ? team.color : "#6b7a9e";
+    }
+
+    matches.forEach((m, i) => {
+      html += `
+      <div class="schedule-row ${m.live ? 'live-row' : ''}" style="${i === matches.length - 1 ? 'border-bottom: none;' : ''}">
+        <div class="row-time"><span style="color:#6b7a9e;font-size:14px;">🕐</span> ${m.time}</div>
+        <div class="row-sport">${m.sport}</div>
+        <div class="row-teams">
+          <span class="row-team" style="color:${getTeamColor(m.teamA)};">${m.teamA}</span>
+          <span class="row-vs">vs</span>
+          <span class="row-team" style="color:${getTeamColor(m.teamB)};">${m.teamB}</span>
+        </div>
+        <div class="row-status-col">
+          ${m.live
+            ? `<div class="badge-live"><span class="live-dot"></span> LIVE</div>`
+            : `<span class="badge-upcoming">Upcoming</span>`
+          }
+        </div>
+      </div>`;
+    });
+    schedCard.innerHTML = html;
+  }
+
+  function renderPodium(teamsData) {
+    if(teamsData.length < 3) return; // ต้องมีอย่างน้อย 3 ทีมเพื่อสร้าง Podium
+    
+    // เรียงตามอันดับ
+    const podiumStage = document.getElementById("podium-stage");
+    podiumStage.innerHTML = "";
+    
+    // โครงสร้างโพเดียม ซ้าย(ที่2), กลาง(ที่1), ขวา(ที่3)
+    const podiumOrder = [
+      { rank: 2, team: teamsData[1], blockH: "140px" },
+      { rank: 1, team: teamsData[0], blockH: "200px" },
+      { rank: 3, team: teamsData[2], blockH: "100px" },
+    ];
+
+    podiumOrder.forEach(({ rank, team, blockH }) => {
+      const medal = rank === 1 ? "🥇" : rank === 2 ? "🥈" : "🥉";
+      const medalSize = rank === 1 ? "40px" : "32px";
+      const col = document.createElement("div");
+      col.className = "podium-col";
+      col.innerHTML = `
+        <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+          <span style="font-size:${medalSize};line-height:1;">${medal}</span>
+          <span style="font-size:52px;line-height:1;filter:drop-shadow(0 4px 12px ${team.color}40);">${team.mascot}</span>
+          <span class="podium-team-name" style="color:${team.color};">${team.name}</span>
+          <span class="podium-pts" style="color:${team.color};">${team.score.toLocaleString()} PTS</span>
+        </div>
+        <div class="podium-block" style="height:${blockH};background:linear-gradient(180deg, ${team.colorLight}, ${team.colorMid}80);border:2px solid ${team.color}30;border-bottom:none;box-shadow:0 -6px 24px ${team.color}20;">
+          <span class="podium-rank-text" style="color:${team.color};">#${rank}</span>
+        </div>
+      `;
+      podiumStage.appendChild(col);
+    });
+
+    // อัปเดตการ์ด Winner ด้านล่างโพเดียม
+    document.querySelector('.winner-name').innerHTML = `${teamsData[0].name} ${teamsData[0].mascot}`;
+    document.querySelector('.winner-desc').innerHTML = `Leading with ${teamsData[0].score.toLocaleString()} points — Competition still in progress`;
+  }
+
+  function animateCount(el, target, duration = 1600) {
+    const steps = 50;
+    const increment = target / steps;
+    let current = 0;
+    const id = setInterval(() => {
+      current += increment;
+      if (current >= target) { el.textContent = target.toLocaleString(); clearInterval(id); }
+      else el.textContent = Math.floor(current).toLocaleString();
+    }, duration / steps);
+  }
+
+  /* ── Navbar scroll ── */
+  window.addEventListener("scroll", () => {
+    document.getElementById("navbar").classList.toggle("scrolled", window.scrollY > 40);
+  });
+
+  /* ── Nav button active ── */
+  function setActive(btn, target) {
+    document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    document.querySelector(target)?.scrollIntoView({ behavior: "smooth" });
+  }
+
+  // โหลดข้อมูลเมื่อเปิดหน้าเว็บ
+  loadFestivalData();
+</script>
+</body>
+</html>
